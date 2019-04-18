@@ -1,0 +1,3 @@
+#Network | Station | Location | Channel | Latitude | Longitude | Elevation | Depth | Azimuth | Dip | SensorDescription | Scale | ScaleFreq | ScaleUnits | SampleRate | StartTime | EndTime
+IV|CAMP||BHE|42.535780|13.409000|1283|0|90|0|NANOMETRICS TRILLIUM-120S|3.49817E8|1|M/S|20|2008-04-04T07:55:00|2015-09-09T07:55:00
+IV|CAMP||BHN|42.535780|13.409000|1283|0|0|0|NANOMETRICS TRILLIUM-120S|3.49817E8|1|M/S|20|2008-04-04T07:55:00|2015-09-09T07:55:00
