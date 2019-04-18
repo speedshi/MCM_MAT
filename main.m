@@ -6,7 +6,7 @@
 % Parameter setting--------------------------------------------------------
 
 % set file names 
-file_seismic='./input_file_examples/day_100.h5'; % path and file name of the seismic data
+file_seismic='./input_file_examples/day_001.h5'; % path and file name of the seismic data
 file_stations='./input_file_examples/stations_0.6rad.txt'; % path and file name of the station information
 file_velocity='./input_file_examples/velocity_CIA.txt'; % path and file name of the velocity model
 
