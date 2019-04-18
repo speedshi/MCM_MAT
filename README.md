@@ -19,3 +19,5 @@ The H5 data should be oganized as follows:
  /_metadata/fe (sampling frequency)
    
  /_metadata/t0_UNIX_timestamp (origin time of the data)
+
+You can check the detailed format using the provided data example: 'day_001.h5'.
