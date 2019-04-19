@@ -1,4 +1,4 @@
-function [data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,precision,fname_d,fname_p,fname_s,freq)
+function [data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,freq,precision,fname_d,fname_p,fname_s)
 % This function is used to generate the binary files for the inputs of MCM.
 % The binary files are waveforms and traveltimes (if needed).
 %
@@ -19,11 +19,11 @@ function [data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,preci
 % stations.name: cell array, 1*nr, station names;
 % tvt_p: array, ns*nr, traveltime table for P-waves;
 % tvt_s: array, ns*nr, traveltime table for S-waves;
+% freq: vector, 1*2, frequency band used to filter seismic data;
 % precision: string, 'single' or 'double', specifiy the outout presicion;
 % fname_d: output filename for waveform data;
 % fname_p: output binary file name for P-wave traveltimes;
-% fname_s: output binary file name for S-wave traveltimes;
-% freq: vector, 1*2, frequency band used to filter seismic data.
+% fname_s: output binary file name for S-wave traveltimes.
 %
 % OUTPUT-------------------------------------------------------------------
 % data: seismic data;
@@ -40,16 +40,20 @@ end
 
 % set default values
 if nargin<5
+    freq=[];
     precision='double';
     fname_d='waveform.dat';
     fname_p='travelp.dat';
     fname_s='travels.dat';
-    freq=[];
 elseif nargin==5
+    precision='double';
     fname_d='waveform.dat';
     fname_p='travelp.dat';
     fname_s='travels.dat';
-    freq=[];
+elseif nargin==6
+    fname_d='waveform.dat';
+    fname_p='travelp.dat';
+    fname_s='travels.dat';
 end
 
 if isempty(precision)

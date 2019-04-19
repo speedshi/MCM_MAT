@@ -31,7 +31,7 @@ function [data,travelp,travels,soup]=mcm_genei(file_seismic,file_stations,file_v
 % soup: source imaging positions, correspond to soupos.dat.
 
 % set default value
-if nargin==4
+if nargin<5
     freq=[];
     precision='double';
 elseif nargin==5
@@ -68,7 +68,7 @@ soup=gene_soup(search.north,search.east,search.depth,search.dn,search.de,search.
 [tvt_p,tvt_s]=gene_traveltime(model,stations,soup,precision,[],[]);
 
 % generate binary files for seismic data and traveltimes
-[data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,precision,freq);
+[data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,freq,precision);
 
 
 end
