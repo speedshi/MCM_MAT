@@ -33,6 +33,10 @@ elseif nargin == 7
     fname='soupos.dat'; % default output file name
 end
 
+if isempty(precision)
+    precision='double';
+end
+
 if ~isempty(fname)
     fname=['./' folder '/' fname]; % including the folder
 end

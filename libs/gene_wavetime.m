@@ -1,4 +1,4 @@
-function [data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,precision,fname_d,fname_p,fname_s)
+function [data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,precision,fname_d,fname_p,fname_s,freq)
 % This function is used to generate the binary files for the inputs of MCM.
 % The binary files are waveforms and traveltimes (if needed).
 %
@@ -14,6 +14,7 @@ function [data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,preci
 % seismic: matlab structure, contains waveform information;
 % seismic.data: nrec*nt, seismic data;
 % seismic.sname: cell array, 1*nrec, station names;
+% seismic.fe: scaler, the sampling frequency of the data, in Hz;
 % stations: matlab structure, contains station information;
 % stations.name: cell array, 1*nr, station names;
 % tvt_p: array, ns*nr, traveltime table for P-waves;
@@ -21,7 +22,8 @@ function [data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,preci
 % precision: string, 'single' or 'double', specifiy the outout presicion;
 % fname_d: output filename for waveform data;
 % fname_p: output binary file name for P-wave traveltimes;
-% fname_s: output binary file name for S-wave traveltimes.
+% fname_s: output binary file name for S-wave traveltimes;
+% freq: vector, 1*2, frequency band used to filter seismic data.
 %
 % OUTPUT-------------------------------------------------------------------
 % data: seismic data;
@@ -42,12 +44,13 @@ if nargin<5
     fname_d='waveform.dat';
     fname_p='travelp.dat';
     fname_s='travels.dat';
+    freq=[];
 elseif nargin==5
     fname_d='waveform.dat';
     fname_p='travelp.dat';
     fname_s='travels.dat';
+    freq=[];
 end
-
 
 if isempty(precision)
     precision='double';
@@ -104,6 +107,17 @@ if n_sta==0
     return;
 else
     fprintf("In total %d traces are found and stored.\n", n_sta);
+end
+
+% check if need filter seismic data
+f_nyqt=0.5*seismic.fe; % Nyquist frequency of seismic data
+if ~isempty(freq)
+    % apply bandpass filter, Filter corners/order is 4
+    fprintf('Apply bandpass filter of %f - %f Hz.\n',freq(1),freq(2));
+    [bb,aa]=butter(4,[freq(1)/f_nyqt freq(2)/f_nyqt],'bandpass');
+    for ir=1:n_sta
+        data(ir,:)=filter(bb,aa,data(ir,:));
+    end
 end
 
 % output binary files

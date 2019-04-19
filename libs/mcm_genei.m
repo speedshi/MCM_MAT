@@ -1,4 +1,4 @@
-function [data,travelp,travels,soup]=mcm_genei(file_seismic,file_stations,file_velocity,search,precision)
+function [data,travelp,travels,soup]=mcm_genei(file_seismic,file_stations,file_velocity,search,freq,precision)
 % This function is used to generate the required input files for MCM.
 % Unit: meter, m/s, degree.
 %
@@ -16,6 +16,7 @@ function [data,travelp,travels,soup]=mcm_genei(file_seismic,file_stations,file_v
 % search.dn: spatial interval in the north direction, in meter;
 % search.de: spatial interval in the east direction, in meter;
 % search.dd: spatial interval in the depth direction, in meter;
+% freq: vector, 1*2, frequency band used to filter seismic data;
 % precision: 'single' or 'double', specify the precision of the output
 % binary files.
 %
@@ -31,13 +32,19 @@ function [data,travelp,travels,soup]=mcm_genei(file_seismic,file_stations,file_v
 
 % set default value
 if nargin==4
+    freq=[];
+    precision='double';
+elseif nargin==5
     precision='double';
 end
 
+if isempty(precision)
+    precision='double';
+end
 
 % Load data from files
 % read in seismic data
-if strcmp(file_seismic(end-2,end),'.h5')
+if strcmp(file_seismic(end-2:end),'.h5')
     % read in the H5 format data
     seismic=read_seish5(file_seismic);
 else
@@ -61,7 +68,7 @@ soup=gene_soup(search.north,search.east,search.depth,search.dn,search.de,search.
 [tvt_p,tvt_s]=gene_traveltime(model,stations,soup,precision,[],[]);
 
 % generate binary files for seismic data and traveltimes
-[data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,precision);
+[data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,precision,freq);
 
 
 end
