@@ -18,6 +18,9 @@ search.dn=1000; % spatial interval of source imaging points in the North directi
 search.de=1000; % spatial interval of source imaging points in the East direction, in meter
 search.dd=1000; % spatial interval of source imaging points in the Depth direction, in meter
 
+% optional input parameters
+freq_seis=[2 22]; % frequency band used to filter the seismic data, in Hz
+
 % earthquake information (optional)
 earthquake.latitude=42.34; % latitude of the earthquake in degree
 earthquake.longitude=13.38; % longitude of the earthquake in degree 
@@ -30,4 +33,4 @@ earthquake.depth=8000; % depth of the earthquake in meter (below surface)
 modelgeo_show(file_stations,file_velocity,search,earthquake);
 
 % generate binary files for MCM inputs
-mcm_genei(file_seismic,file_stations,file_velocity,search);
+mcm_genei(file_seismic,file_stations,file_velocity,search,freq_seis);
