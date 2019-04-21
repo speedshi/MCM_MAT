@@ -1,4 +1,4 @@
-function [data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,freq,precision,fname_d,fname_p,fname_s)
+function [data,dt,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,freq,precision,fname_d,fname_p,fname_s)
 % This function is used to generate the binary files for the inputs of MCM.
 % The binary files are waveforms and traveltimes (if needed).
 %
@@ -27,6 +27,7 @@ function [data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,freq,
 %
 % OUTPUT-------------------------------------------------------------------
 % data: seismic data;
+% dt: time sampling interval of seismic data, in second;
 % travelp: P-wave traveltime table;
 % travels: S-wave traveltime table.
 
@@ -123,6 +124,9 @@ if ~isempty(freq)
         data(ir,:)=filter(bb,aa,data(ir,:));
     end
 end
+
+% obtain time sampling interval of seismic data
+dt=1.0/seismic.fe;
 
 % output binary files
 % seismic data

@@ -1,4 +1,4 @@
-function [data,travelp,travels,soup]=mcm_genei(file_seismic,file_stations,file_velocity,search,freq,precision)
+function [data,travelp,travels,soup]=mcm_genei(file_seismic,file_stations,file_velocity,search,freq,mcm,precision)
 % This function is used to generate the required input files for MCM.
 % Unit: meter, m/s, degree.
 %
@@ -17,6 +17,7 @@ function [data,travelp,travels,soup]=mcm_genei(file_seismic,file_stations,file_v
 % search.de: spatial interval in the east direction, in meter;
 % search.dd: spatial interval in the depth direction, in meter;
 % freq: vector, 1*2, frequency band used to filter seismic data;
+% mcm: matlab structure, specify MCM parameters, used to generate 'migpara.dat';
 % precision: 'single' or 'double', specify the precision of the output
 % binary files.
 %
@@ -25,6 +26,7 @@ function [data,travelp,travels,soup]=mcm_genei(file_seismic,file_stations,file_v
 % travelp.dat: binary file of P-wave traveltimes for MCM input;
 % travels.dat: binary file of S-wave traveltimes for MCM input;
 % soupos.dat: binary file of source imaging positions for MCM input;
+% migpara.dat: text file for MCM parameters;
 % data: seismic data, correspond to waveform.dat;
 % travelp: P-wave traveltime table, correspond to travelp.dat;
 % travels: S-wave traveltime table, correspond to travels.dat;
@@ -33,8 +35,12 @@ function [data,travelp,travels,soup]=mcm_genei(file_seismic,file_stations,file_v
 % set default value
 if nargin<5
     freq=[];
+    mcm=[];
     precision='double';
 elseif nargin==5
+    mcm=[];
+    precision='double';
+elseif nargin==6
     precision='double';
 end
 
@@ -68,7 +74,20 @@ soup=gene_soup(search.north,search.east,search.depth,search.dn,search.de,search.
 [tvt_p,tvt_s]=gene_traveltime(model,stations,soup,precision,[],[]);
 
 % generate binary files for seismic data and traveltimes
-[data,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,freq,precision);
+[data,dt,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,freq,precision);
 
+% generate text files for mcm parameters
+if ~isempty(mcm)
+    mcm.nre=size(data,1); % number of stations
+    mcm.nsr=size(soup,1); % number of imaging points
+    mcm.dfname='waveform.dat'; % file name of seismic data
+    mcm.dt=dt; % time sampling interval, in second
+    mcm.tdatal=(size(data,2)-1)*dt; % time length of the whole seismic data in second (s)
+    mcm.vthrd=0.001; % threshold value for identifying seismic event in the migration volume
+    mcm.spaclim=1; % the space limit in searching for potential seismic events, in meter (m)
+    mcm.timelim=dt; % the time limit in searching for potential seismic events, in second (s)
+    mcm.nssot=1; % the maximum number of potential seismic events can be accept for a single origin time
+    gene_migpara(mcm); % generate the text file
+end
 
 end
