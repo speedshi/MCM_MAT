@@ -21,6 +21,15 @@ search.dd=1000; % spatial interval of source imaging points in the Depth directi
 % optional input parameters
 freq_seis=[2 22]; % frequency band used to filter the seismic data, in Hz
 
+% mcm parameters
+mcm.migtp=0; % migration method; 0 for MCM, 1 for conventional migration.
+mcm.phasetp=2; % phase used for migration; 0 for P-phase only, 1 for S-phase only, 2 for P+S-phases.
+mcm.cfuntp=0; % characteristic function; 0 for original data, 1 for envelope, 2 for absolute value, 3 for non-negative value, 4 for square value
+mcm.tpwind=10; % P-phase time window length in second (s) used for migration.
+mcm.tswind=10; % S-phase time window length in second (s) used for migration.
+mcm.dt0=0.1; % time sampling interval of searching origin times in second (s).
+mcm.mcmdim=2; % the dimension of MCM
+
 % earthquake information (optional)
 earthquake.latitude=42.34; % latitude of the earthquake in degree
 earthquake.longitude=13.38; % longitude of the earthquake in degree 
@@ -33,4 +42,4 @@ earthquake.depth=8000; % depth of the earthquake in meter (below surface)
 modelgeo_show(file_stations,file_velocity,search,earthquake);
 
 % generate binary files for MCM inputs
-mcm_genei(file_seismic,file_stations,file_velocity,search,freq_seis);
+mcm_genei(file_seismic,file_stations,file_velocity,search,freq_seis,mcm);
