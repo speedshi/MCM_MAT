@@ -84,8 +84,8 @@ if ~isempty(mcm)
     mcm.dt=dt; % time sampling interval, in second
     mcm.tdatal=(size(data,2)-1)*dt; % time length of the whole seismic data in second (s)
     mcm.vthrd=0.001; % threshold value for identifying seismic event in the migration volume
-    mcm.spaclim=1; % the space limit in searching for potential seismic events, in meter (m)
-    mcm.timelim=dt; % the time limit in searching for potential seismic events, in second (s)
+    mcm.spaclim=0; % the space limit in searching for potential seismic events, in meter (m)
+    mcm.timelim=0; % the time limit in searching for potential seismic events, in second (s)
     mcm.nssot=1; % the maximum number of potential seismic events can be accept for a single origin time
     gene_migpara(mcm); % generate the text file
 end
