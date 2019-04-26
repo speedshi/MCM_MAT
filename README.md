@@ -13,14 +13,19 @@ The code now only accept seismic data of HDF5 format. Other formats will be supp
 The H5 data should be oganized as follows:
 
  /NETWORK_NAME (contains different stations)
+
 |
  --/NETWORK_NAME/STATION_NAME (contains single component data)
+
 |
  ----/NETWORK_NAME/STATION_NAME/COMPONENT_NAME (contains seismic data)
+
 |
  /_metadata (contains sampling frequency and time information)
+
 |
  --/_metadata/fe (sampling frequency)
+
 |
  --/_metadata/t0_UNIX_timestamp (origin time of the data)
 
