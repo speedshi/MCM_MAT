@@ -14,19 +14,14 @@ The H5 data should be oganized as follows:
 
  /NETWORK_NAME (contains different stations)
 
-|
  --/NETWORK_NAME/STATION_NAME (contains single component data)
 
-|
  ----/NETWORK_NAME/STATION_NAME/COMPONENT_NAME (contains seismic data)
 
-|
  /_metadata (contains sampling frequency and time information)
 
-|
  --/_metadata/fe (sampling frequency)
 
-|
  --/_metadata/t0_UNIX_timestamp (origin time of the data)
 
 You can check the detailed format using the provided data example: 'day_001.h5'.
