@@ -1,4 +1,4 @@
-function [data,dt,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,freq,precision,fname_d,fname_p,fname_s)
+function [trace,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,freq,precision,fname_d,fname_p,fname_s)
 % This function is used to generate the binary files for the inputs of MCM.
 % The binary files are waveforms and traveltimes (if needed).
 %
@@ -15,8 +15,12 @@ function [data,dt,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,fr
 % seismic.data: nrec*nt, seismic data;
 % seismic.sname: cell array, 1*nrec, station names;
 % seismic.fe: scaler, the sampling frequency of the data, in Hz;
+% seismic.t0: matlab datetime, the starting time of seismic data;
 % stations: matlab structure, contains station information;
 % stations.name: cell array, 1*nr, station names;
+% stations.north: vector, 1*nr, north coordinates of all stations;
+% stations.east: vector, 1*nr, east coordinates of all stations;
+% stations.depth: vector, 1*nr, depth coordinates of all stations;
 % tvt_p: array, ns*nr, traveltime table for P-waves;
 % tvt_s: array, ns*nr, traveltime table for S-waves;
 % freq: vector, 1*2, frequency band used to filter seismic data;
@@ -26,10 +30,17 @@ function [data,dt,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,fr
 % fname_s: output binary file name for S-wave traveltimes.
 %
 % OUTPUT-------------------------------------------------------------------
-% data: seismic data;
-% dt: time sampling interval of seismic data, in second;
+% trace: matlab structure, contain selected data information;
+% trace.data: seismic data;
+% trace.dt: time sampling interval of seismic data, in second;
+% trace.name: name of selected stations;
+% trace.north: north coordinates of selected stations;
+% trace.east: east coordinates of selected stations;
+% trace.depth: depth coordinates of selected stations;
+% trace.t0: matlab datetime, the starting time of traces;
 % travelp: P-wave traveltime table;
 % travels: S-wave traveltime table.
+
 
 
 folder='data'; % name of the folder where output data are stored
@@ -76,8 +87,10 @@ end
 
 nr=length(stations.name); % number of stations in the station file
 
+trace.t0=seismic.t0; % starting time of seismic data (traces)
+
 % initialize
-data=[];
+trace.data=[];
 travelp=[];
 travels=[];
 
@@ -91,7 +104,11 @@ for ir=1:nr
         % find seismic data for this station
         fprintf("Found seismic data for the station '%s'.\n",stations.name{ir});
         n_sta=n_sta+1;
-        data(n_sta,:)=seismic.data(indx,:); % seismic data
+        trace.data(n_sta,:)=seismic.data(indx,:); % seismic data
+        trace.name{n_sta}=stations.name{ir}; % station name
+        trace.north(n_sta)=stations.north(ir); % north coordinate of station
+        trace.east(n_sta)=stations.east(ir); % east coordinate of station
+        trace.depth(n_sta)=stations.depth(ir); % depth coordinate of station
         if ~isempty(tvt_p)
             travelp(:,n_sta)=tvt_p(:,ir); % P-wave traveltime table
         end
@@ -121,18 +138,18 @@ if ~isempty(freq)
     fprintf('Apply bandpass filter of %f - %f Hz.\n',freq(1),freq(2));
     [bb,aa]=butter(4,[freq(1)/f_nyqt freq(2)/f_nyqt],'bandpass');
     for ir=1:n_sta
-        data(ir,:)=filter(bb,aa,data(ir,:));
+        trace.data(ir,:)=filter(bb,aa,trace.data(ir,:));
     end
 end
 
 % obtain time sampling interval of seismic data
-dt=1.0/seismic.fe;
+trace.dt=1.0/seismic.fe;
 
 % output binary files
 % seismic data
-if ~isempty(fname_d) && ~isempty(data)
+if ~isempty(fname_d) && ~isempty(trace.data)
     fid=fopen(fname_d,'w');
-    fwrite(fid,data,precision);
+    fwrite(fid,trace.data,precision);
     fclose(fid);
 end
 
