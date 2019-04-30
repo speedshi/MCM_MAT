@@ -106,7 +106,7 @@ end
 
 addrs=sprintf('%s/info.mat',folder); % name of output file
 % output matlab format data, can be used for later
-save(addrs,'trace','travelp','travels','soup');
+save(addrs,'trace','travelp','travels','soup','search');
 
 
 end
