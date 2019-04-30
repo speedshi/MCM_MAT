@@ -63,7 +63,7 @@ end
 % get earthquake positions, can be more than one earthquake, each row shows
 % positions of an earthquake
 if ~isempty(earthquake)
-    [snorth,seast,sdepth]=geod2cart(earthquake.latitude,earthquake.longitude,-earthquake.depth);
+    [seast,snorth,sdepth]=geod2cart(earthquake.latitude,earthquake.longitude,-earthquake.depth);
     seisp=[snorth,seast,sdepth]; % earthquake positions
 else
     seisp=[];
