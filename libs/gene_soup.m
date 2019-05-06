@@ -1,4 +1,4 @@
-function soup=gene_soup(north_r,east_r,depth_r,dn,de,dd,precision,fname)
+function [soup,snr,ser,sdr,nsnr,nser,nsdr]=gene_soup(north_r,east_r,depth_r,dn,de,dd,precision,fname)
 % This function is used to generate source imaging points in 3D space.
 %
 % Unit: meter.
@@ -17,6 +17,12 @@ function soup=gene_soup(north_r,east_r,depth_r,dn,de,dd,precision,fname)
 % fname: file name of the output binary source position file.
 % OUTPUT-------------------------------------------------------------------
 % soup: Cartesian coordinates of source imaging points, matrix, nsr*3;
+% snr: north coordinates, vector, 1*nsnr;
+% ser: east coordinates, vector, 1*nser;
+% sdr: depth coordinates, vector, 1*nsdr;
+% nsnr: number of imaging points in the north direction, scalar;
+% nser: number of imaging points in the east direction, scalar;
+% nsdr: number of imaging points in the depth direction, scalar;
 % fname: binary source position file.
 
 folder='data'; % name of the folder where output data are stored

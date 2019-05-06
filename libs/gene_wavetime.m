@@ -1,4 +1,4 @@
-function [trace,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,freq,precision,fname_d,fname_p,fname_s)
+function trace=gene_wavetime(seismic,stations,ffilter,precision,fname_d,fname_p,fname_s)
 % This function is used to generate the binary files for the inputs of MCM.
 % The binary files are waveforms and traveltimes (if needed).
 %
@@ -21,9 +21,12 @@ function [trace,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,freq
 % stations.north: vector, 1*nr, north coordinates of all stations;
 % stations.east: vector, 1*nr, east coordinates of all stations;
 % stations.depth: vector, 1*nr, depth coordinates of all stations;
-% tvt_p: array, ns*nr, traveltime table for P-waves;
-% tvt_s: array, ns*nr, traveltime table for S-waves;
-% freq: vector, 1*2, frequency band used to filter seismic data;
+% stations.travelp: P-wave traveltime table, in second, 2D array, ns*nr;
+% stations.travels: S-wave traveltime table, in second, 2D array, ns*nr;
+% ffilter: matlab structure, contains filtering information;
+% ffilter.freq: frequency band used to filter the seismic data, a vector containing 1 or 2 elements, in Hz
+% ffilter.type: filter type, can be 'low', 'bandpass', 'high', 'stop'
+% ffilter.order: order of Butterworth filter, for bandpass and bandstop designs are of order 2n
 % precision: string, 'single' or 'double', specifiy the outout presicion;
 % fname_d: output filename for waveform data;
 % fname_p: output binary file name for P-wave traveltimes;
@@ -31,15 +34,15 @@ function [trace,travelp,travels]=gene_wavetime(seismic,stations,tvt_p,tvt_s,freq
 %
 % OUTPUT-------------------------------------------------------------------
 % trace: matlab structure, contain selected data information;
-% trace.data: seismic data;
-% trace.dt: time sampling interval of seismic data, in second;
-% trace.name: name of selected stations;
-% trace.north: north coordinates of selected stations;
-% trace.east: east coordinates of selected stations;
-% trace.depth: depth coordinates of selected stations;
+% trace.data: seismic data, 2D array, n_sta*nt;
+% trace.dt: time sampling interval of seismic data, in second, scalar;
+% trace.name: name of selected stations, vector, 1*n_sta;
+% trace.north: north coordinates of selected stations, vector, 1*n_sta;
+% trace.east: east coordinates of selected stations, vector, 1*n_sta;
+% trace.depth: depth coordinates of selected stations, vector, 1*n_sta;
 % trace.t0: matlab datetime, the starting time of traces;
-% travelp: P-wave traveltime table;
-% travels: S-wave traveltime table.
+% trace.travelp: P-wave traveltime table, 2D array, ns*n_sta;
+% trace.travels: S-wave traveltime table, 2D array, ns*n_sta.
 
 
 
@@ -51,18 +54,18 @@ if ~exist(folder,'dir')
 end
 
 % set default values
-if nargin<5
-    freq=[];
+if nargin<3
+    ffilter=[];
     precision='double';
     fname_d='waveform.dat';
     fname_p='travelp.dat';
     fname_s='travels.dat';
-elseif nargin==5
+elseif nargin==3
     precision='double';
     fname_d='waveform.dat';
     fname_p='travelp.dat';
     fname_s='travels.dat';
-elseif nargin==6
+elseif nargin==4
     fname_d='waveform.dat';
     fname_p='travelp.dat';
     fname_s='travels.dat';
@@ -91,8 +94,8 @@ trace.t0=seismic.t0; % starting time of seismic data (traces)
 
 % initialize
 trace.data=[];
-travelp=[];
-travels=[];
+trace.travelp=[];
+trace.travels=[];
 
 n_sta=0; % total number of effective stations
 
@@ -109,11 +112,11 @@ for ir=1:nr
         trace.north(n_sta)=stations.north(ir); % north coordinate of station
         trace.east(n_sta)=stations.east(ir); % east coordinate of station
         trace.depth(n_sta)=stations.depth(ir); % depth coordinate of station
-        if ~isempty(tvt_p)
-            travelp(:,n_sta)=tvt_p(:,ir); % P-wave traveltime table
+        if ~isempty(stations.travelp)
+            trace.travelp(:,n_sta)=stations.travelp(:,ir); % P-wave traveltime table
         end
-        if ~isempty(tvt_s)
-            travels(:,n_sta)=tvt_s(:,ir); % S-wave traveltime table
+        if ~isempty(stations.travels)
+            trace.travels(:,n_sta)=stations.travels(:,ir); % S-wave traveltime table
         end
     elseif sum(indx)==0
         % no seismic data for this station is found.
@@ -133,10 +136,30 @@ end
 
 % check if need filter seismic data
 f_nyqt=0.5*seismic.fe; % Nyquist frequency of seismic data
-if ~isempty(freq)
-    % apply bandpass filter, Filter corners/order is 4
-    fprintf('Apply bandpass filter of %f - %f Hz.\n',freq(1),freq(2));
-    [bb,aa]=butter(4,[freq(1)/f_nyqt freq(2)/f_nyqt],'bandpass');
+if ~isempty(ffilter)
+    % apply Butterworth filter in frequency domain
+    
+    if ~isfield(ffilter,'order')
+        ffilter.order=4; % default filter order is 4
+    end
+    
+    nfreq=length(ffilter.freq);
+    switch nfreq        
+        case 1
+            if ~isfield(ffilter,'type')
+                ffilter.type='high';
+            end
+            fprintf('Apply a %d-order %spass Butterworth filter with cutoff frequency %f Hz.\n',ffilter.order,ffilter.type,ffilter.freq);
+        case 2
+            if ~isfield(ffilter,'type')
+                ffilter.type='bandpass';
+            end
+            fprintf('Apply a %d-order %s Butterworth filter of %f - %f Hz.\n',2*ffilter.order,ffilter.type,ffilter.freq);
+        otherwise
+            error('Incorrect input for frequency filter parameters.\n');
+    end
+    
+    [bb,aa]=butter(ffilter.order,ffilter.freq/f_nyqt,ffilter.type);
     for ir=1:n_sta
         trace.data(ir,:)=filter(bb,aa,trace.data(ir,:));
     end
@@ -154,16 +177,16 @@ if ~isempty(fname_d) && ~isempty(trace.data)
 end
 
 % P-wave traveltime table
-if ~isempty(fname_p) && ~isempty(travelp)
+if ~isempty(fname_p) && ~isempty(trace.travelp)
     fid=fopen(fname_p,'w');
-    fwrite(fid,travelp,precision);
+    fwrite(fid,trace.travelp,precision);
     fclose(fid);
 end
 
 % S-wave traveltime table
-if ~isempty(fname_s) && ~isempty(travels)
+if ~isempty(fname_s) && ~isempty(trace.travels)
     fid=fopen(fname_s,'w');
-    fwrite(fid,travels,precision);
+    fwrite(fid,trace.travels,precision);
     fclose(fid);
 end
 
