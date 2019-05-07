@@ -10,7 +10,7 @@ Note this package calculate traveltime tables using ray-tracing. Earth curvature
 The codes are tested on Matlab in Linux environment. For windows environment, it may has problems.
 'main.m' is the main script which will call some other subroutines in the 'libs' folder. So you should add the 'libs' folder into you Matlab path first before runing the program.
 
-The code now only accept seismic data of HDF5 and SAC format. Other formats will be supported in the future.
+The code now only accept seismic data of HDF5 and SAC format. Other formats will be supported in the future. For the SAC format, a cell array containing the name of SAC files is used as the input for seismic data.
 
 The H5 data should be oganized as follows:
 
