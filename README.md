@@ -3,6 +3,20 @@ Matlab subroutines to initialize the MCM fortran codes
 
 Developer: Peidong Shi; email: speedshi@hotmail.com
 
+## References
+
+More details about the theory and applications of MCM can be found in:
+
+1. Shi, P., Angus, D., Rost, S., Nowacki, A. and Yuan, S., 2018a. Automated seismic waveform location using Multichannel Coherency Migration (MCM)–I. Theory. _Geophysical Journal International_, 216, 1842&ndash;1866.
+doi:[10.1093/gji/ggy132](https://doi.org/10.1093/gji/ggy132)
+
+2. Shi, P., Nowacki, A., Rost, S., Angus, D., 2018b. Automated seismic waveform location using Multichannel Coherency Migration (MCM)–II. Application to induced and volcano-tectonic seismicity. _Geophysical Journal International_, 216, 1608&ndash;1632.
+doi:[10.1093/gji/ggy507](https://doi.org/10.1093/gji/ggy507)
+
+Please cite these publications if you use the MCM in your work.
+
+## Descriptions
+
 The Matlab package can generate the required input files in the correct format for the MCM fortran codes (seisloc), such as the waveform file, traveltime file, imaging position file and MCM parameter file. The package reqiures: 1. seismic data in H5 format; 2. velocity model file in text format (layered or homogeneous); 3. station information file in IRIS text format. For detailed file format, you can check the input file examples.
 
 Note this package calculate traveltime tables using ray-tracing. Earth curvature is not considered. Therefore, this package only applies for local scale problems.
@@ -28,6 +42,8 @@ The H5 data should be oganized as follows:
 
 You can check the detailed format using the provided data example: 'day_001.h5'.
 
+
+## Related 
 
 For reading SAC format, I use rdsac.m which is developed by François Beauducel, [IPGP]
 The liscence of rdsac.m is as follow:
