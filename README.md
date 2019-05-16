@@ -43,7 +43,7 @@ The H5 data should be oganized as follows:
 You can check the detailed format using the provided data example: 'day_001.h5'.
 
 
-## Related 
+## Related codes
 
 For reading SAC format, I use rdsac.m which is developed by François Beauducel, [IPGP]
 The liscence of rdsac.m is as follow:
