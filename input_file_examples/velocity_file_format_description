@@ -1,6 +1,6 @@
 # Right-hand coordinate systerm in Cartesian coordinate. X: North; Y: East; Z: vertical down.
 # The veolocity model can be homogeneous or layered. If there is only one layer, it is a homogeneous model.
 
-0                           | float. Reference starting depth (free surface) in meter, can be negtive or positive. Normally is 0, which means the depth of free surface is 0 (the seal-level).
+0                           | float. Depth of the free surface of the model in meter, can be negtive or positive. 0 means the depth of free surface is at the sea-level. Equals to -elevation.
 100    3500      2000       | float-float-float. Thickness(m)-Vp(m/s)-Vs(m/s) of the layer 1.
 ...                         | float-float-float. Thickness(m)-Vp(m/s)-Vs(m/s) of the layer 2.
