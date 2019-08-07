@@ -26,7 +26,9 @@ mcm.tpwind=20; % P-phase time window length in second (s) used for migration.
 mcm.tswind=20; % S-phase time window length in second (s) used for migration.
 mcm.dt0=0.2; % time sampling interval of searching origin times in second (s).
 mcm.mcmdim=2; % the dimension of MCM
-mcm.workfolder='test'; % the working folder for output and MCM program 
+mcm.workfolder='test'; % the working folder for output and MCM program
+mcm.run=4; % specify which MCM program to run: -1 for generating MCM binary files; 0 for testing MCM parameters; 1 for MCM frequency band testing; 2 for MCM Matlab testing with catalog input; 3 for MCM Matlab testing with input time range; 4 for Run MCM Matlab program
+
 
 % optional input parameters
 mcm.filter.freq=[12 22]; % frequency band used to filter the seismic data, a vector containing 1 or 2 elements, in Hz
@@ -42,7 +44,6 @@ earthquake.longitude=13.38; % longitude of the earthquake in degree
 earthquake.depth=8000; % depth of the earthquake in meter (below surface)
 
 % set parameters for MCM testing (optional)
-mcm.run=4; % specify which MCM program to run: 0 for testing MCM parameters; 1 for MCM frequency band testing; 2 for MCM Matlab testing with catalog input; 3 for MCM Matlab testing with input time range; 4 for Run MCM Matlab program
 mcm.test.cataname='/home/shipe/projects_going/Aquila_data/catalog/INGV_catalog_1year_0.txt'; % catalog file name
 mcm.test.cataid=3; % specify test which event in the catalog (required by run=0-2)
 mcm.test.twind=30; % time window length around the selected event origin time, in second (required by run=2)
