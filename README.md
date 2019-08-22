@@ -17,7 +17,11 @@ Please cite these publications if you use the MCM in your work.
 
 ## Descriptions
 
-The Matlab package can generate the required input files in the correct format for the MCM fortran codes (seisloc), such as the waveform file, traveltime file, imaging position file and MCM parameter file. The package reqiures: 1. seismic data in H5 format; 2. velocity model file in text format (layered or homogeneous); 3. station information file in IRIS text format. For detailed file format, you can check the input file examples.
+The Matlab package can generate the required input files in the correct format for the MCM fortran codes (seisloc), such as the waveform file, traveltime file, imaging position file and MCM parameter file. The package reqiures: 
+1. seismic data in HDF5 format; 
+2. velocity model file in text format (layered or homogeneous); 
+3. station information file in IRIS text format. 
+For detailed file format, you can check the input file examples.
 
 Note this package calculate traveltime tables using ray-tracing. Earth curvature is not considered. Therefore, this package only applies for local scale problems.
 
