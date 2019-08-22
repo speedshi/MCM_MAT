@@ -31,11 +31,11 @@ The codes are tested on Matlab 2018b in Linux environment. For windows environme
 
 The code now only accept seismic data of HDF5 and SAC format. Other formats will be supported in the future. For the SAC format, a cell array containing the name of SAC files is used as the input for seismic data.
 
-The H5 data should be oganized as follows:
+The HDF5 data should be oganized as follows:
 
  /NETWORK_NAME (contains different stations)
 
- --/NETWORK_NAME/STATION_NAME (contains single component data)
+ --/NETWORK_NAME/STATION_NAME (contains different component data)
 
  ----/NETWORK_NAME/STATION_NAME/COMPONENT_NAME (contains seismic data)
 
