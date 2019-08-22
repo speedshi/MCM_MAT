@@ -21,6 +21,7 @@ The Matlab package can generate the required input files in the correct format f
 1. seismic data in HDF5 format; 
 2. velocity model file in text format (layered or homogeneous); 
 3. station information file in IRIS text format. 
+
 For detailed file format, you can check the input file examples.
 
 Note this package calculate traveltime tables using ray-tracing. Earth curvature is not considered. Therefore, this package only applies for local scale problems.
