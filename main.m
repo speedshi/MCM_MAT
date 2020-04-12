@@ -27,7 +27,7 @@ mcm.tswind=20; % S-phase time window length in second (s) used for migration.
 mcm.dt0=0.2; % time sampling interval of searching origin times in second (s).
 mcm.mcmdim=2; % the dimension of MCM
 mcm.workfolder='test'; % the working folder for output and MCM program
-mcm.run=4; % specify which MCM program to run: -1 for generating MCM binary files; 0 for testing MCM parameters; 1 for MCM frequency band testing; 2 for MCM Matlab testing with catalog input; 3 for MCM Matlab testing with input time range; 4 for Run MCM Matlab program
+mcm.run=3; % specify which MCM program to run: -1 for generating MCM binary files; 0 for testing MCM parameters; 1 for MCM frequency band testing; 2 for MCM Matlab testing with catalog input; 3 for MCM Matlab testing with input time range; 4 for Run MCM Matlab program
 
 
 % optional input parameters
