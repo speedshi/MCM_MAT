@@ -1,5 +1,7 @@
 # MCM_MAT
-Matlab subroutines to initialize the MCM fortran codes
+Matlab-based software to perform quake location using MCM.
+
+Matlab version should higher than 2018b.
 
 Developer: Peidong Shi; email: speedshi@hotmail.com
 
